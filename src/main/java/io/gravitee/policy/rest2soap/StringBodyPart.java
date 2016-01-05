@@ -13,22 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.gravitee.policy.soap.configuration;
+package io.gravitee.policy.rest2soap;
 
-import io.gravitee.policy.api.PolicyConfiguration;
+import io.gravitee.gateway.api.http.BodyPart;
+
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
 
 /**
  * @author David BRASSELY (brasseld at gmail.com)
  */
-public class SoapTransformerPolicyConfiguration implements PolicyConfiguration {
+public class StringBodyPart implements BodyPart {
 
-    private String envelope;
+    private final byte[] bytes;
 
-    public String getEnvelope() {
-        return envelope;
+    public StringBodyPart(String body) {
+        bytes = body.getBytes(Charset.forName("UTF-8"));
     }
 
-    public void setEnvelope(String envelope) {
-        this.envelope = envelope;
+    @Override
+    public int length() {
+        return bytes.length;
+    }
+
+    @Override
+    public byte[] getBodyPartAsBytes() {
+        return bytes;
+    }
+
+    @Override
+    public ByteBuffer getBodyPartAsByteBuffer() {
+        return ByteBuffer.wrap(bytes);
     }
 }

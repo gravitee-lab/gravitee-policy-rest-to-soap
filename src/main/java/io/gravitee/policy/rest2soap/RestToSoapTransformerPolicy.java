@@ -13,35 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.gravitee.policy.soap;
+package io.gravitee.policy.rest2soap;
 
 import io.gravitee.common.http.HttpHeaders;
-import io.gravitee.common.http.HttpHeadersValues;
 import io.gravitee.gateway.api.ExecutionContext;
 import io.gravitee.gateway.api.Request;
 import io.gravitee.gateway.api.Response;
 import io.gravitee.policy.api.PolicyChain;
 import io.gravitee.policy.api.annotations.OnRequest;
-import io.gravitee.policy.soap.configuration.SoapTransformerPolicyConfiguration;
+import io.gravitee.policy.rest2soap.configuration.SoapTransformerPolicyConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * @author David BRASSELY (brasseld at gmail.com)
  */
-public class SoapTransformerPolicy {
+public class RestToSoapTransformerPolicy {
 
     /**
      * LOGGER
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(SoapTransformerPolicy.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(RestToSoapTransformerPolicy.class);
 
     /**
      * SOAP transformer configuration
      */
     private final SoapTransformerPolicyConfiguration soapTransformerPolicyConfiguration;
 
-    public SoapTransformerPolicy(SoapTransformerPolicyConfiguration soapTransformerPolicyConfiguration) {
+    public RestToSoapTransformerPolicy(SoapTransformerPolicyConfiguration soapTransformerPolicyConfiguration) {
         this.soapTransformerPolicyConfiguration = soapTransformerPolicyConfiguration;
     }
 
