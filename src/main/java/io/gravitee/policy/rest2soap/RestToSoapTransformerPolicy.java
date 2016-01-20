@@ -16,6 +16,7 @@
 package io.gravitee.policy.rest2soap;
 
 import io.gravitee.common.http.HttpHeaders;
+import io.gravitee.common.http.HttpMethod;
 import io.gravitee.gateway.api.ExecutionContext;
 import io.gravitee.gateway.api.Request;
 import io.gravitee.gateway.api.Response;
@@ -50,8 +51,12 @@ public class RestToSoapTransformerPolicy {
                 soapTransformerPolicyConfiguration.getEnvelope());
 
         // By specifying this attribute, you're reading the request data without pushing them in the final client request.
-        executionContext.setAttribute(ExecutionContext.ATTR_BODY_CONTENT, soapEnvelope);
+        executionContext.setAttribute(ExecutionContext.ATTR_REQUEST_BODY_CONTENT, soapEnvelope);
 
+        // Force method to POST for SOAP requests
+        executionContext.setAttribute(ExecutionContext.ATTR_REQUEST_METHOD, HttpMethod.POST);
+
+        // Force HTTP headers with SOAP envelope
         request.headers().set(HttpHeaders.CONTENT_TYPE, "text/xml");
         request.headers().set(HttpHeaders.CONTENT_LENGTH, Integer.toString(soapEnvelope.length()));
 
