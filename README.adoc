@@ -1,0 +1,42 @@
+=== REST to SOAP Policy
+
+https://github.com/gravitee-io/gravitee-policy-rest-to-soap[Source code],
+image:http://build.gravitee.io/jenkins/buildStatus/icon?job=gravitee-policy-rest-to-soap["Build status", link="http://build.gravitee.io/jenkins/job/gravitee-policy-rest-to-soap/"]
+
+==== Scope
+
+|===
+|onRequest |onResponse
+
+|
+|
+
+|===
+
+==== Description
+
+Todo
+
+==== Configuration
+
+You can configure the policy with the following options :
+
+|===
+|Property |Required |Description |Type |Default
+
+|Todo
+|Todo
+|Todo
+|Todo
+|_todo_
+
+|===
+
+
+[source, json]
+.Sample
+----
+"rest-to-soap": {
+  "todo": true
+}
+----
