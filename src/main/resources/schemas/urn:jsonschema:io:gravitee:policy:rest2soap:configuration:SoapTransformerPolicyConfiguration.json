@@ -1,0 +1,14 @@
+{
+  "type" : "object",
+  "id" : "urn:jsonschema:io:gravitee:policy:rest2soap:configuration:SoapTransformerPolicyConfiguration",
+  "properties" : {
+    "envelope" : {
+      "title": "SOAP envelope",
+      "type" : "string",
+      "x-schema-form": {
+        "type": "textarea",
+        "placeholder": "Place your SOAP envelope here"
+      }
+    }
+  }
+}
