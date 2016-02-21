@@ -1,9 +1,9 @@
-=== REST to SOAP Policy
+= REST to SOAP Policy
 
 https://github.com/gravitee-io/gravitee-policy-rest-to-soap[Source code],
 image:http://build.gravitee.io/jenkins/buildStatus/icon?job=gravitee-policy-rest-to-soap["Build status", link="http://build.gravitee.io/jenkins/job/gravitee-policy-rest-to-soap/"]
 
-==== Scope
+== Scope
 
 |===
 |onRequest |onResponse
@@ -13,11 +13,11 @@ image:http://build.gravitee.io/jenkins/buildStatus/icon?job=gravitee-policy-rest
 
 |===
 
-==== Description
+== Description
 
 Todo
 
-==== Configuration
+== Configuration
 
 You can configure the policy with the following options :
 
