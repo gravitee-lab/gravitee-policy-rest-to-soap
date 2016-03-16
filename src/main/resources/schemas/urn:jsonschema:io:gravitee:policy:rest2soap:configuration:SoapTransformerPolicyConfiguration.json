@@ -10,5 +10,8 @@
         "placeholder": "Place your SOAP envelope here"
       }
     }
-  }
+  },
+  "required": [
+    "envelope"
+  ]
 }
