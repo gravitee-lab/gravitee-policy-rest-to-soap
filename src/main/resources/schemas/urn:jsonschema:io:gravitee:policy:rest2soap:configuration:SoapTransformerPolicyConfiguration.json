@@ -3,12 +3,25 @@
   "id" : "urn:jsonschema:io:gravitee:policy:rest2soap:configuration:SoapTransformerPolicyConfiguration",
   "properties" : {
     "envelope" : {
-      "title": "SOAP envelope",
+      "title": "SOAP Envelope",
+      "description": "SOAP envelope used to invoke WS (support EL)",
       "type" : "string",
       "x-schema-form": {
-        "type": "textarea",
-        "placeholder": "Place your SOAP envelope here"
+        "type": "codemirror",
+        "codemirrorOptions": {
+          "placeholder": "Place your SOAP envelope here",
+          "lineWrapping": true,
+          "lineNumbers": true,
+          "allowDropFileTypes": true,
+          "autoCloseTags": true,
+          "mode": "xml"
+        }
       }
+    },
+    "soapAction": {
+      "title": "SOAP Action",
+      "description": "'SOAPAction' HTTP header send when invoking WS",
+      "type": "string"
     }
   },
   "required": [

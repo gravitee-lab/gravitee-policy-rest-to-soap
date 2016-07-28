@@ -47,6 +47,8 @@ public class RestToSoapTransformerPolicy {
      */
     private final static Logger LOGGER = LoggerFactory.getLogger(RestToSoapTransformerPolicy.class);
 
+    private final static String SOAP_ACTION_HEADER = "SOAPAction";
+
     /**
      * SOAP transformer configuration
      */
@@ -65,6 +67,12 @@ public class RestToSoapTransformerPolicy {
         // Force HTTP headers with SOAP envelope
         request.headers().set(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_XML);
         request.headers().set(HttpHeaders.TRANSFER_ENCODING, HttpHeadersValues.TRANSFER_ENCODING_CHUNKED);
+
+        if (soapTransformerPolicyConfiguration.getSoapAction() != null &&
+                !soapTransformerPolicyConfiguration.getSoapAction().trim().isEmpty()) {
+            LOGGER.debug("Add a SOAPAction header to invoke SOAP WS: {}", soapTransformerPolicyConfiguration.getSoapAction());
+            request.headers().set(SOAP_ACTION_HEADER, soapTransformerPolicyConfiguration.getSoapAction());
+        }
 
         policyChain.doNext(request, response);
     }

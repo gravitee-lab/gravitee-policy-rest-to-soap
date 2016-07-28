@@ -25,11 +25,21 @@ public class SoapTransformerPolicyConfiguration implements PolicyConfiguration {
 
     private String envelope;
 
+    private String soapAction;
+
     public String getEnvelope() {
         return envelope;
     }
 
     public void setEnvelope(String envelope) {
         this.envelope = envelope;
+    }
+
+    public String getSoapAction() {
+        return soapAction;
+    }
+
+    public void setSoapAction(String soapAction) {
+        this.soapAction = soapAction;
     }
 }
