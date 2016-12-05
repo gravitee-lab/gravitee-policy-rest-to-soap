@@ -81,7 +81,7 @@ public class RestToSoapTransformerPolicy {
     public ReadWriteStream onRequestContent(Request request, ExecutionContext executionContext) {
         return new TransformableStream() {
             @Override
-            protected Function<Buffer, Buffer> transform() throws TransformationException {
+            public Function<Buffer, Buffer> transform() throws TransformationException {
                 return buffer -> {
                     executionContext.getTemplateEngine().getTemplateContext().setVariable("request",
                             new ContentAwareEvaluableRequest(request, buffer.toString()));
