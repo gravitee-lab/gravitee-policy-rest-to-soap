@@ -16,9 +16,8 @@
 package io.gravitee.policy.rest2soap.el;
 
 import io.gravitee.common.http.HttpHeaders;
+import io.gravitee.common.util.MultiValueMap;
 import io.gravitee.gateway.api.Request;
-
-import java.util.Map;
 
 /**
  * @author David BRASSELY (david.brassely at graviteesource.com)
@@ -42,7 +41,7 @@ public class ContentAwareEvaluableRequest {
         return request.headers();
     }
 
-    public Map<String, String> getParams() {
+    public MultiValueMap<String, String> getParams() {
         return request.parameters();
     }
 
