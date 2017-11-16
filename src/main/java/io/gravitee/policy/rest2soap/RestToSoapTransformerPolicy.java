@@ -15,17 +15,14 @@
  */
 package io.gravitee.policy.rest2soap;
 
-import io.gravitee.common.http.HttpHeaders;
-import io.gravitee.common.http.HttpHeadersValues;
 import io.gravitee.common.http.HttpMethod;
 import io.gravitee.common.http.MediaType;
 import io.gravitee.gateway.api.ExecutionContext;
 import io.gravitee.gateway.api.Request;
 import io.gravitee.gateway.api.Response;
 import io.gravitee.gateway.api.buffer.Buffer;
+import io.gravitee.gateway.api.http.stream.TransformableRequestStreamBuilder;
 import io.gravitee.gateway.api.stream.ReadWriteStream;
-import io.gravitee.gateway.api.stream.TransformableStream;
-import io.gravitee.gateway.api.stream.exception.TransformationException;
 import io.gravitee.policy.api.PolicyChain;
 import io.gravitee.policy.api.annotations.OnRequest;
 import io.gravitee.policy.api.annotations.OnRequestContent;
@@ -33,8 +30,6 @@ import io.gravitee.policy.rest2soap.configuration.SoapTransformerPolicyConfigura
 import io.gravitee.policy.rest2soap.el.ContentAwareEvaluableRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.function.Function;
 
 /**
  * @author David BRASSELY (david.brassely at graviteesource.com)
@@ -64,10 +59,6 @@ public class RestToSoapTransformerPolicy {
         LOGGER.debug("Override HTTP methods for SOAP invocation");
         executionContext.setAttribute(ExecutionContext.ATTR_REQUEST_METHOD, HttpMethod.POST);
 
-        // Force HTTP headers with SOAP envelope
-        request.headers().set(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_XML);
-        request.headers().set(HttpHeaders.TRANSFER_ENCODING, HttpHeadersValues.TRANSFER_ENCODING_CHUNKED);
-
         if (soapTransformerPolicyConfiguration.getSoapAction() != null &&
                 !soapTransformerPolicyConfiguration.getSoapAction().trim().isEmpty()) {
             LOGGER.debug("Add a SOAPAction header to invoke SOAP WS: {}", soapTransformerPolicyConfiguration.getSoapAction());
@@ -79,30 +70,19 @@ public class RestToSoapTransformerPolicy {
 
     @OnRequestContent
     public ReadWriteStream onRequestContent(Request request, ExecutionContext executionContext) {
-        return new TransformableStream() {
-            @Override
-            public Function<Buffer, Buffer> transform() throws TransformationException {
-                return buffer -> {
-                    executionContext.getTemplateEngine().getTemplateContext().setVariable("request",
-                            new ContentAwareEvaluableRequest(request, buffer.toString()));
+        return TransformableRequestStreamBuilder
+                .on(request)
+                .contentType(MediaType.TEXT_XML)
+                .transform(
+                        buffer -> {
+                            executionContext.getTemplateEngine().getTemplateContext().setVariable("request",
+                                    new ContentAwareEvaluableRequest(request, buffer.toString()));
 
-                    String soapEnvelope = executionContext.getTemplateEngine().convert(
-                            soapTransformerPolicyConfiguration.getEnvelope());
+                            String soapEnvelope = executionContext.getTemplateEngine().convert(
+                                    soapTransformerPolicyConfiguration.getEnvelope());
 
-                    return Buffer.buffer(soapEnvelope);
-                };
-            }
-
-            @Override
-            public void end() {
-                Buffer content = transform().apply(buffer);
-
-                // Flush content
-                super.flush(content);
-
-                // Mark the end of content
-                super.end();
-            }
-        };
+                            return Buffer.buffer(soapEnvelope);
+                        }
+                ).build();
     }
 }
