@@ -23,9 +23,9 @@ import io.gravitee.gateway.api.Response;
 import io.gravitee.gateway.api.buffer.Buffer;
 import io.gravitee.gateway.api.http.stream.TransformableRequestStreamBuilder;
 import io.gravitee.gateway.api.stream.ReadWriteStream;
+import io.gravitee.policy.api.ChainScope;
 import io.gravitee.policy.api.PolicyChain;
-import io.gravitee.policy.api.annotations.OnRequest;
-import io.gravitee.policy.api.annotations.OnRequestContent;
+import io.gravitee.policy.api.annotations.*;
 import io.gravitee.policy.rest2soap.configuration.SoapTransformerPolicyConfiguration;
 import io.gravitee.policy.rest2soap.el.ContentAwareEvaluableRequest;
 import org.slf4j.Logger;
@@ -35,6 +35,10 @@ import org.slf4j.LoggerFactory;
  * @author David BRASSELY (david.brassely at graviteesource.com)
  * @author GraviteeSource Team
  */
+@Policy(
+        category = @Category(io.gravitee.policy.api.Category.TRANSFORMATION),
+        scope = @Scope(ChainScope.API)
+)
 public class RestToSoapTransformerPolicy {
 
     /**
