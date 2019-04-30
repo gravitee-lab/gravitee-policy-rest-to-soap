@@ -27,6 +27,8 @@ public class SoapTransformerPolicyConfiguration implements PolicyConfiguration {
 
     private String soapAction;
 
+    private String charset;
+
     public String getEnvelope() {
         return envelope;
     }
@@ -42,4 +44,13 @@ public class SoapTransformerPolicyConfiguration implements PolicyConfiguration {
     public void setSoapAction(String soapAction) {
         this.soapAction = soapAction;
     }
+
+    public String getCharset() {
+        return charset;
+    }
+
+    public void setCharset(String charset) {
+        this.charset = charset;
+    }
+
 }
