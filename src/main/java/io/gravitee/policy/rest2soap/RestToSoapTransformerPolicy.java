@@ -71,7 +71,7 @@ public class RestToSoapTransformerPolicy {
     @OnRequestContent
     public ReadWriteStream onRequestContent(Request request, ExecutionContext executionContext) {
         String charset =  soapTransformerPolicyConfiguration.getCharset() ;
-	String content_type = (charset == null || charset.trim().equals("") ? MediaType.TEXT_XML : MediaType.TEXT_XML + "; charset="+charset ) ;
+	String contentType = (charset == null || charset.isEmpty() ? MediaType.TEXT_XML : MediaType.TEXT_XML + "; charset="+charset);
         return TransformableRequestStreamBuilder
                 .on(request)
 		.contentType(content_type)
