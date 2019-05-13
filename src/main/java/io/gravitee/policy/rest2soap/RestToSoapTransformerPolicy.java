@@ -74,7 +74,7 @@ public class RestToSoapTransformerPolicy {
 	String contentType = (charset == null || charset.isEmpty() ? MediaType.TEXT_XML : MediaType.TEXT_XML + "; charset="+charset);
         return TransformableRequestStreamBuilder
                 .on(request)
-		.contentType(content_type)
+		.contentType(contentType)
                 .transform(
                         buffer -> {
                             executionContext.getTemplateEngine().getTemplateContext().setVariable("request",
