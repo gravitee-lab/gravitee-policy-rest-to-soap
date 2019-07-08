@@ -16,7 +16,9 @@
 package io.gravitee.policy.rest2soap;
 
 import io.gravitee.common.http.HttpMethod;
+import io.gravitee.common.http.HttpStatusCode;
 import io.gravitee.common.http.MediaType;
+import io.gravitee.el.exceptions.ELNullEvaluationException;
 import io.gravitee.gateway.api.ExecutionContext;
 import io.gravitee.gateway.api.Request;
 import io.gravitee.gateway.api.Response;
@@ -69,7 +71,7 @@ public class RestToSoapTransformerPolicy {
     }
 
     @OnRequestContent
-    public ReadWriteStream onRequestContent(Request request, ExecutionContext executionContext) {
+    public ReadWriteStream onRequestContent(Request request, ExecutionContext executionContext, PolicyChain policyChain) {
         return TransformableRequestStreamBuilder
                 .on(request)
                 .contentType(MediaType.TEXT_XML)
@@ -80,6 +82,13 @@ public class RestToSoapTransformerPolicy {
 
                             String soapEnvelope = executionContext.getTemplateEngine().convert(
                                     soapTransformerPolicyConfiguration.getEnvelope());
+
+                            if (soapEnvelope == null) {
+
+                                policyChain.streamFailWith(io.gravitee.policy.api.PolicyResult.failure(
+                                        HttpStatusCode.INTERNAL_SERVER_ERROR_500,  new ELNullEvaluationException(soapTransformerPolicyConfiguration.getEnvelope()).getMessage()));
+                                return null;
+                            }
 
                             return Buffer.buffer(soapEnvelope);
                         }
