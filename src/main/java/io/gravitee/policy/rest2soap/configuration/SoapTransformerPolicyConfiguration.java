@@ -29,6 +29,8 @@ public class SoapTransformerPolicyConfiguration implements PolicyConfiguration {
 
     private String charset;
 
+    private boolean preserveQueryParams = false;
+
     public String getEnvelope() {
         return envelope;
     }
@@ -53,4 +55,11 @@ public class SoapTransformerPolicyConfiguration implements PolicyConfiguration {
         this.charset = charset;
     }
 
+    public boolean isPreserveQueryParams() {
+        return preserveQueryParams;
+    }
+
+    public void setPreserveQueryParams(boolean preserveQueryParams) {
+        this.preserveQueryParams = preserveQueryParams;
+    }
 }
