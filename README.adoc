@@ -61,6 +61,12 @@ You can configure the policy with the following options :
 |This charset will be appended to the Content-Type header value
 |
 
+|Preserve Query Parameters
+|
+|
+|This option specify if the query parameters are propagated to the backend SOAP service
+|
+
 |===
 
 

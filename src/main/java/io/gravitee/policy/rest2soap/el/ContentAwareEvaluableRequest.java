@@ -30,7 +30,7 @@ public class ContentAwareEvaluableRequest {
 
     public ContentAwareEvaluableRequest(Request request, String content) {
         this.request = request;
-        this.content =content;
+        this.content = content;
     }
 
     public String getId() {

@@ -18,11 +18,15 @@ package io.gravitee.policy.rest2soap;
 import io.gravitee.common.http.HttpMethod;
 import io.gravitee.common.http.HttpStatusCode;
 import io.gravitee.common.http.MediaType;
+import io.gravitee.common.util.LinkedMultiValueMap;
+import io.gravitee.common.util.MultiValueMap;
 import io.gravitee.el.exceptions.ELNullEvaluationException;
 import io.gravitee.gateway.api.ExecutionContext;
 import io.gravitee.gateway.api.Request;
+import io.gravitee.gateway.api.RequestWrapper;
 import io.gravitee.gateway.api.Response;
 import io.gravitee.gateway.api.buffer.Buffer;
+import io.gravitee.gateway.api.context.MutableExecutionContext;
 import io.gravitee.gateway.api.http.stream.TransformableRequestStreamBuilder;
 import io.gravitee.gateway.api.stream.ReadWriteStream;
 import io.gravitee.policy.api.PolicyChain;
@@ -67,18 +71,27 @@ public class RestToSoapTransformerPolicy {
             request.headers().set(SOAP_ACTION_HEADER, soapTransformerPolicyConfiguration.getSoapAction());
         }
 
+        // The ManagedRequestWrapper removes pathInfo for SOAP request in order to use the Server URL as defined into the OpenAPI spec
+        // it also hides the query parameters if required, the query parameter may be used as variable in the template, so to allow
+        // the template engine to process query parameters we have to hide them from the EndpointInvoker but preserve them in the original request.
+        if (executionContext instanceof MutableExecutionContext) {
+            ((MutableExecutionContext) executionContext)
+                    .request(new RestToSoapResquestWrapper(executionContext.request(), !soapTransformerPolicyConfiguration.isPreserveQueryParams()));
+        }
+
         policyChain.doNext(request, response);
     }
 
     @OnRequestContent
     public ReadWriteStream onRequestContent(Request request, ExecutionContext executionContext, PolicyChain policyChain) {
         String charset =  soapTransformerPolicyConfiguration.getCharset() ;
-	String contentType = (charset == null || charset.isEmpty() ? MediaType.TEXT_XML : MediaType.TEXT_XML + "; charset="+charset);
+	    String contentType = (charset == null || charset.isEmpty() ? MediaType.TEXT_XML : MediaType.TEXT_XML + "; charset="+charset);
         return TransformableRequestStreamBuilder
                 .on(request)
 		.contentType(contentType)
                 .transform(
                         buffer -> {
+
                             executionContext.getTemplateEngine().getTemplateContext().setVariable("request",
                                     new ContentAwareEvaluableRequest(request, buffer.toString()));
 
@@ -95,5 +108,58 @@ public class RestToSoapTransformerPolicy {
                             return Buffer.buffer(soapEnvelope);
                         }
                 ).build();
+    }
+
+    /**
+     * Use to hide the pathInfo and query parameters according to the wrapper options.
+     */
+    private static class RestToSoapResquestWrapper extends RequestWrapper {
+        /**
+         * hide the pathInfo attribute
+         */
+        private boolean hidePathInfo = true;
+        /**
+         * hide the query parameters
+         */
+        private boolean hideQueryParams = false;
+
+        public RestToSoapResquestWrapper(Request request, boolean  cleanQueryParams) {
+            super(request);
+            this.hideQueryParams = cleanQueryParams;
+        }
+
+        public boolean clearPathInfo() {
+            return hidePathInfo;
+        }
+
+        public void setHidePathInfo(boolean hidePathInfo) {
+            this.hidePathInfo = hidePathInfo;
+        }
+
+        public boolean clearQueryParams() {
+            return hideQueryParams;
+        }
+
+        public void setHideQueryParams(boolean hideQueryParams) {
+            this.hideQueryParams = hideQueryParams;
+        }
+
+        @Override
+        public String pathInfo() {
+            if (hidePathInfo) {
+                return "";
+            } else {
+                return super.pathInfo();
+            }
+        }
+
+        @Override
+        public MultiValueMap<String, String> parameters() {
+            if (hideQueryParams) {
+                return new LinkedMultiValueMap<>();
+            } else {
+                return super.parameters();
+            }
+        }
     }
 }

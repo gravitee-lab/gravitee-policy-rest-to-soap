@@ -27,6 +27,11 @@
       "title": "Charset",
       "description": "This charset will be appended to the Content-Type header value",
       "type": "string"
+    },
+    "preserveQueryParams": {
+      "title": "Preserve Query Parameters",
+      "description": "Define if the query parameters are propagated to the backend SOAP service",
+      "type": "boolean"
     }
   },
   "required": [
