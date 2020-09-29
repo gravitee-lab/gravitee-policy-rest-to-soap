@@ -118,7 +118,7 @@ jobs:
       - checkout
       - secrethub/install
       - run:
-          name: "[DRY RUN] First WORKFLOW for Product Release Dry Run"
+          name: "[DRY RUN] First WORKFLOW for Product Release Dry Run"
           command: |
                     echo "[DRY RUN] First WORKFLOW for Product Release Dry Run"
                     echo "Here what will be done is just echoing all Product Release Shell commands, to check their paramters /optionsvalues, the git branch etc..."
